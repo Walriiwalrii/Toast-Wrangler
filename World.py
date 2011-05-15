@@ -117,7 +117,7 @@ class World:
         self.statusLines = []
         self.statusOffset = 11-6
         for i in range(0, 10):
-            self.statusLines.append('WEEE %d' % (i))
+            self.addStatusLine('WEEE %d' % (i))
         self.statusLinesAttribute = 0
 
     def setOverlay(self, newOverlay):
@@ -316,6 +316,10 @@ class World:
 
     def placeItem(self, item, itemX = 0, itemY = 0):
         self.world[itemX][itemY].addItem(item, itemX, itemY)
+
+    def addStatusLine(self, string):
+        self.statusLines.append(string)
+        pass
 
     def drawStatusRegion(self):
         maxSideBarLen = 11

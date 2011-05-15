@@ -30,6 +30,9 @@ class Player(Creature.Creature):
             return True
         return False
 
+    def doHelp(self):
+        pass
+
     def doThink(self):
         self.world.addEventCallback(self.speed, self.doThink, self)
         
@@ -54,6 +57,7 @@ class Player(Creature.Creature):
                 self.world.draw()
                 continue
             if (key == ToastWrangler.helpKey):
+                self.doHelp()
                 pass
             if (not didAttack and key == ToastWrangler.attackKey):
                 overlayOn = False
