@@ -1,0 +1,10 @@
+Move some code from Player.py to Creature.py, and integrate a simple AI that uses the InputHandler class. End result: players 'see' actions of enemies as if enemies are controlled by a local keyboard.
+
+Lighting Sources have a z-position (e.g., on ground, a bit above ground, high above ground etc.) and this affects which cells they light up - ray tracing
+
+races
+classes
+inventory
+fighting
+character dialog
+tutorial

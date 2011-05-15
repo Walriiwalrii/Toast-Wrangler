@@ -1,0 +1,19 @@
+    ______)                __       __)                        
+   (, /                   (, )  |  /                  /)       
+     /   ____   _  _/_       | /| /  __  _  __   _   //  _  __ 
+  ) /   (_)(_(_/_)_(__       |/ |/  / (_(_(_/ (_(_/_(/__(/_/ (_
+ (_/                         /  |              .-/             
+                                              (_/
+
+Quick Directions:
+
+Tab                : switch views (from single unit view to team view)
+z                  : switch depth view mode (view terrain height/appearance)
+up/down/left/right : move a unit 1 square
+a                  : attack a unit (direction keys to aim)
+.                  : wait
+Q                  : quit
+
+Uses FOV code from:
+    http://roguebasin.roguelikedevelopment.org/
+    index.php?title=Python_shadowcasting_implementation 
