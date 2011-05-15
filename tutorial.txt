@@ -5,15 +5,18 @@
  (_/                         /  |              .-/             
                                               (_/
 
+       A Wild West curses/text-based tactical RPG.
+
 Quick Directions:
 
 Tab                : switch views (from single unit view to team view)
 z                  : switch depth view mode (view terrain height/appearance)
-up/down/left/right : move a unit 1 square
+up/down/left/right : move a unit 1 square (numpad also works)
 a                  : attack a unit (direction keys to aim)
-.                  : wait
-Q                  : quit
+. or enter         : end current unit's turn
+?                  : help (identify what the things on the screen are)
+Q                  : quit (case sensitive)
 
-Uses FOV code from:
+Uses FOV code originally from:
     http://roguebasin.roguelikedevelopment.org/
     index.php?title=Python_shadowcasting_implementation 

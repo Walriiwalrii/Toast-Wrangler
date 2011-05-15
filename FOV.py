@@ -38,39 +38,39 @@ class LightMap(object):
         self.world = world
         self.width, self.height = self.world.getDimensions()
         self.light = []
-	self.changeIntensity(intensity)
-	self.changed = True
-	self.changePosition(x,y)
-	self.setEnabled(enabled)
-	self.resetMap()
+    self.changeIntensity(intensity)
+    self.changed = True
+    self.changePosition(x,y)
+    self.setEnabled(enabled)
+    self.resetMap()
 
     def setEnabled(self, newEnabled):
-	assert(newEnabled == True or newEnabled == False)
-	self.enabled = newEnabled
-	self.changed = True
+    assert(newEnabled == True or newEnabled == False)
+    self.enabled = newEnabled
+    self.changed = True
 
     def changePosition(self, newX, newY):
-	assert(newX >= 0 and newY >= 0)
-	self.x = newX
-	self.y = newY
-	self.changed = True
+    assert(newX >= 0 and newY >= 0)
+    self.x = newX
+    self.y = newY
+    self.changed = True
 
     def changeIntensity(self, newIntensity):
-	newIntensity = float(newIntensity)
-	assert(newIntensity > 0.0)
-	self.changed = True
-	self.intensity = newIntensity
+    newIntensity = float(newIntensity)
+    assert(newIntensity > 0.0)
+    self.changed = True
+    self.intensity = newIntensity
 
     def resetMap(self):
-	self.light = []
+    self.light = []
         for i in range(self.height):
             self.light.append([0.0] * self.width)
-	
+    
     def getLightAt(self, x, y):
-	if (not self.enabled):
-		return 0.0
-	else:
-		return self.square(x,y)
+    if (not self.enabled):
+        return 0.0
+    else:
+        return self.square(x,y)
 
     def square(self, x, y):
         return self.light[y][x]
@@ -86,8 +86,8 @@ class LightMap(object):
     def set_lit(self, x, y, distance):
         if 0 <= x < self.width and 0 <= y < self.height:
             self.light[y][x] = distance
-	    if (self.square(x,y) < LightMap.epsilon):
-		self.light[y][x] = 0.0
+        if (self.square(x,y) < LightMap.epsilon):
+        self.light[y][x] = 0.0
 
     def _cast_light(self, cx, cy, row, start, end, radius, xx, xy, yx, yy, id):
         "Recursive lightcasting function"
@@ -110,7 +110,7 @@ class LightMap(object):
                     break
                 else:
                     # Our light beam is touching this square; light it:
-		    distSquared = dx*dx + dy*dy
+            distSquared = dx*dx + dy*dy
                     if distSquared < radius_squared:
                         self.set_lit(X, Y, radius - math.sqrt(distSquared))
                     if blocked:
@@ -132,20 +132,20 @@ class LightMap(object):
             if blocked:
                 break
     def do_fov(self):
-	if (self.changed):
-		self.changed = False
-		self.resetMap()
-		if (not self.enabled):
-			return
-		radius = int(math.ceil(self.intensity))
-		"Calculate lit squares from the given location and radius"
-		for oct in range(8):
-		    self._cast_light(self.x, self.y, 1, 1.0, 0.0, radius,
-		                     self.mult[0][oct], self.mult[1][oct],
-		                     self.mult[2][oct], self.mult[3][oct], 0)
+    if (self.changed):
+        self.changed = False
+        self.resetMap()
+        if (not self.enabled):
+            return
+        radius = int(math.ceil(self.intensity))
+        "Calculate lit squares from the given location and radius"
+        for oct in range(8):
+            self._cast_light(self.x, self.y, 1, 1.0, 0.0, radius,
+                             self.mult[0][oct], self.mult[1][oct],
+                             self.mult[2][oct], self.mult[3][oct], 0)
 
-		#Lights at a particular position always light up the position they are at
-		self.set_lit(self.x, self.y, self.intensity)
+        #Lights at a particular position always light up the position they are at
+        self.set_lit(self.x, self.y, self.intensity)
 
     def display(self, s, X, Y):
         "Display the map on the given curses screen (utterly unoptimized)"
