@@ -1,0 +1,11 @@
+    ______)                __       __)                        
+   (, /                   (, )  |  /                  /)       
+     /   ____   _  _/_       | /| /  __  _  __   _   //  _  __ 
+  ) /   (_)(_(_/_)_(__       |/ |/  / (_(_(_/ (_(_/_(/__(/_/ (_
+ (_/                         /  |              .-/             
+                                              (_/
+
+
+Toast Wrangler is a turn-based strategy/tactical RPG. It uses only curses
+graphics and has a wild west theme. There's a heavy emphasis on line of sight
+and lighting.
