@@ -1,5 +1,6 @@
 import curses, copy, random
 import Colors
+import string
 
 import ToastWrangler
 
@@ -9,6 +10,16 @@ class WorldRepresentation:
     @staticmethod
     def convertString(str):
         return str.encode(ToastWrangler.encoding)
+
+    def getWalkableDescription(self):
+        if (self.isWalkable):
+            return 'can walk on it'
+        return 'cannot walk on it'
+
+    def getBlocksSightDescription(self):
+        if (self.blocksSight):
+            return 'blocks line of sight'
+        return 'does not block line of sight'
 
     def __init__(self, world, x, y, z = 0):
         self.x = x
@@ -102,3 +113,16 @@ class WorldRepresentation:
             if (i.doesAppearOnMap(viewer, globalLighting)):
                 return i.getDrawTuple(viewer, globalLighting)
         return (self.getRepresentation(viewer, globalLighting), self.getAttribute(viewer, globalLighting))
+
+    def getHelpDescription(self):
+        objectType = self.__class__.__name__
+        walkable = self.getWalkableDescription()
+        sight = self.getBlocksSightDescription()
+
+        return '%s (%s, %s)' % (objectType, walkable, sight)
+
+    def getContentsDescription(self):
+        if (len(self.contents) <= 0):
+            return '[no contents]'
+
+        return string.join([o.getHelpDescription() for o in self.contents], ', ')

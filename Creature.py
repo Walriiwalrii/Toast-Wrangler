@@ -29,6 +29,9 @@ class Creature(Item.LocationAwareItem):
         self.horizontalAttackDistance = 1
         self.verticalAttackDistance = 1
 
+    def getHelpDescription(self):
+        return self.description
+
     def canAttack(self, x, y):
         if (self.canSee(x,y)):
             xCost = abs(self.x - x)

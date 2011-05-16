@@ -14,7 +14,7 @@ z                  : switch depth view mode (view terrain height/appearance)
 up/down/left/right : move a unit 1 square (numpad also works)
 a                  : attack a unit (direction keys to aim)
 . or enter         : end current unit's turn
-?                  : help (identify what the things on the screen are)
+/                  : help (figure out what the text symbols mean)
 Q                  : quit (case sensitive)
 
 Uses FOV code originally from:

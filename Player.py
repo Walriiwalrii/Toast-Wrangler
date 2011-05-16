@@ -13,24 +13,81 @@ class Player(Creature.Creature):
         self.attackOverlay = Overlay.CanAttackOverlay(world, self)
         Creature.Creature.placeInto(self, world, worldCell, x, y)
 
-    def keysAvailableAnytime(self, key):
+    def keysAvailableAnytime(self, key, shouldDraw = True):
         if (key == ToastWrangler.zModeKey):
             if (self.world.getDrawMode() == World.World.DRAW_DETAIL_DEPTH):
                 self.world.setDrawMode(World.World.DRAW_DETAIL_PHYSICAL)                
             else:
                 self.world.setDrawMode(World.World.DRAW_DETAIL_DEPTH)
-            self.world.draw()
+            if (shouldDraw):
+                self.world.draw()
             return True
         elif (key == ToastWrangler.tabKey):
             if (self.world.getViewMode() == World.World.VIEW_VIEWER_INFORMATION):
                 self.world.setViewMode(World.World.VIEW_TEAM_INFORMATION)
             else:
                 self.world.setViewMode(World.World.VIEW_VIEWER_INFORMATION)
-            self.world.draw()
+            if (shouldDraw):
+                self.world.draw()
             return True
         return False
 
     def doHelp(self):
+        self.world.addStatusLine('Entered help mode:')
+        self.world.addStatusLine('Use direction keys to move around. \'q\' to exit. SPACE/ENTER to view square.')
+
+        self.world.setViewMode(World.World.VIEW_TEAM_INFORMATION)
+
+        self.world.draw()
+
+        class HelpViewer:
+                def __init__(self, team, x, y):
+                    self.x = x
+                    self.y = y
+                    self.team = team
+
+                def getLocation(self):
+                    return (self.x, self.y)
+
+                def changeLocation(self, x, y):
+                    self.x = x
+                    self.y = y
+                    Logger.put('HelpViewer location: (%d, %d)' % (x, y))
+
+                def canSee(self, x, y):
+                    return self.team.canSee(x,y)
+
+                def getBrightnessThreshold(self, x, y):
+                    return self.team.getBrightnessThreshold(x, y)
+
+        viewer = HelpViewer(self.world.team, self.x, self.y)
+
+        key = None
+
+        while (key != ToastWrangler.qKey):
+            key = self.inputHandler.waitForKey()
+
+            if (key == ToastWrangler.enterKey or key == ToastWrangler.spaceKey):
+                if (viewer.canSee(viewer.x, viewer.y)):
+                    cell = self.world.getWorldCell(viewer.x, viewer.y)
+                    self.world.addStatusLine('What is here:')
+                    self.world.addStatusLine(' * %s' % (cell.getHelpDescription()))
+                    self.world.addStatusLine(' * %s' % (cell.getContentsDescription()))
+                    pass
+                pass
+            else: #try to interpret this as a direction key
+                try:
+                    dir = self.inputHandler.keyToOffset(key)
+    
+                    if (self.world.isInBounds(viewer.x + dir[0], viewer.y + dir[1])):
+                       viewer.changeLocation(viewer.x + dir[0], viewer.y + dir[1]) 
+                except ValueError:
+                    pass
+            self.world.draw(viewer)
+            pass
+
+        self.world.addStatusLine('Exited help mode')
+        self.world.draw()
         pass
 
     def doThink(self):
@@ -53,12 +110,13 @@ class Player(Creature.Creature):
             if (key == ToastWrangler.enterKey or key == ord('.')): #skip turn
                 didAttack = doneMoving = True
                 continue
-            if (self.keysAvailableAnytime(key)):
-                self.world.draw()
-                continue
+            Logger.put('found; %d, help = %d' % (key, ToastWrangler.helpKey))
             if (key == ToastWrangler.helpKey):
                 self.doHelp()
                 pass
+            if (self.keysAvailableAnytime(key)):
+                self.world.draw()
+                continue
             if (not didAttack and key == ToastWrangler.attackKey):
                 overlayOn = False
                 self.attackOverlay.setCursorPosition(self.x, self.y)
@@ -105,9 +163,11 @@ class Player(Creature.Creature):
                     pass
                     #not a direction
                     #Logger.put('rejected: %d' % (key))
-#                   if (key == 65): #a
-#                       c = Creature.Creature()
-#                       self.world.placeItem(c, 0, 0)
+            if (key == 66):  #a
+                c = Creature.Creature()
+                self.world.placeItem(c, 0, 0)
+                self.world.addStatusLine('Added creature to 0 0')
+                self.world.draw()
 
         
 

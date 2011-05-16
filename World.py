@@ -77,6 +77,7 @@ class World:
         self.screen = screen
         self.width = width
         self.height = height
+        self.statusLinesHeight = 5
         self.time = 0
         self.eventHeap = []
         self.shouldPause = False
@@ -319,12 +320,13 @@ class World:
 
     def addStatusLine(self, string):
         self.statusLines.append(string)
+        self.statusOffset = max(len(self.statusLines) - self.statusLinesHeight, 0)
         pass
 
     def drawStatusRegion(self):
         maxSideBarLen = 11
         width = self.screen.getmaxyx()[1] - 1 - maxSideBarLen - 1
-        height = 5
+        height = self.statusLinesHeight
         startX = 0
         startY = self.screen.getmaxyx()[0] - 6
 
@@ -334,8 +336,9 @@ class World:
 
         for i in self.statusLines[self.statusOffset:]:
             linesDrawn = linesDrawn + 1
+            remainingSpace = width - len(i)
 
-            self.screen.addnstr(startY + linesDrawn, startX, i, width, self.statusLinesAttribute)
+            self.screen.addnstr(startY + linesDrawn, startX, i + ' ' * remainingSpace, width, self.statusLinesAttribute)
 
             if (linesDrawn >= height):
                 break
@@ -375,8 +378,9 @@ class World:
                 viewer = self.team
             else:
                 viewer = self.currentViewer
-        else:
-            assert(self.getViewMode() != World.VIEW_TEAM_INFORMATION)
+#unnecessary asserts: the help feature can override the viewer parameter now.
+#        else:
+#            assert(self.getViewMode() != World.VIEW_TEAM_INFORMATION)
 
         if (maxWidth == None):
             maxWidth = min(self.screen.getmaxyx()[1], self.width)
@@ -407,7 +411,8 @@ class World:
 
         self.prepareForDraw()
 
-        viewerCoords = self.currentViewer.getLocation()
+        #viewerCoords = self.currentViewer.getLocation()
+        viewerCoords = viewer.getLocation()
         
 
         for j in yDims:
@@ -428,7 +433,7 @@ class World:
                 else:
                     raise ValueError('Draw mode: %d not yet finished.' % (self.drawMode))
                 
-                Logger.put('%d, %d, %s, %s' % (j-startY, i-startX, representation[0], representation[1]))
+                #Logger.put('%d, %d, %s, %s' % (j-startY, i-startX, representation[0], representation[1]))
                 self.screen.addstr(j - startY, i - startX, representation[0], representation[1])
                 #self.screen.addch(j - startY, i - startX, 178, representation[1])
                     

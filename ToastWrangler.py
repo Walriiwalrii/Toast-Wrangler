@@ -15,11 +15,16 @@ screen = None
 shouldQuit = False
 
 quitKey     = 81 #capital 'Q'
+
 zModeKey    = ord('z')
 tabKey      = ord('\t')
 attackKey   = ord('a')
+
 enterKey    = ord('\n')
-helpKey     = ord('?')
+spaceKey    = ord(' ')
+
+helpKey     = ord('/')
+qKey        = ord('q')
 
 def setQuit(quitStatus = True):
     global shouldQuit
@@ -36,7 +41,7 @@ def doIntro(screen):
     for l in open('tutorial.txt'):
         screen.addstr(l)
         screen.refresh()
-        time.sleep(0.100)
+        #time.sleep(0.100)
         
     while (not quit):
         coords = screen.getmaxyx()
