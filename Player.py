@@ -114,17 +114,21 @@ class Player(Creature.Creature):
             if (key == ToastWrangler.helpKey):
                 self.doHelp()
                 pass
-            if (self.keysAvailableAnytime(key)):
+            elif (self.keysAvailableAnytime(key)):
                 self.world.draw()
                 continue
-            if (not didAttack and key == ToastWrangler.attackKey):
+            elif (not didAttack and key == ToastWrangler.attackKey):
                 overlayOn = False
                 self.attackOverlay.setCursorPosition(self.x, self.y)
                 self.world.setOverlay(self.attackOverlay)
                 self.world.draw()
                 key = self.inputHandler.pauseForKey()
-                self.keysAvailableAnytime(key)
-                while (key != ToastWrangler.attackKey):
+                if (self.keysAvailableAnytime(key)):
+                    self.world.draw()
+                    continue
+
+                attackModeQuitKeys = [ToastWrangler.attackKey, ToastWrangler.enterKey, ToastWrangler.spaceKey]
+                while (not key in attackModeQuitKeys):
                     key = self.inputHandler.pauseForKey()
                     self.keysAvailableAnytime(key)
     
@@ -140,8 +144,11 @@ class Player(Creature.Creature):
                     else: self.world.setDefaultOverlay()
                     self.world.draw()
                     overlayOn = not overlayOn
+
                 self.world.setDefaultOverlay()
-                didAttack = True
+                if (key != ToastWrangler.attackKey):
+                    didAttack = True
+                    self.world.addStatusLine('You attacked (%d, %d)' %  (self.attackOverlay.cursorPosX, self.attackOverlay.cursorPosY))
                 
             elif (key == ToastWrangler.quitKey):
                 return retVal
@@ -163,7 +170,7 @@ class Player(Creature.Creature):
                     pass
                     #not a direction
                     #Logger.put('rejected: %d' % (key))
-            if (key == 66):  #a
+            elif (key == 66):  #a
                 c = Creature.Creature()
                 self.world.placeItem(c, 0, 0)
                 self.world.addStatusLine('Added creature to 0 0')
