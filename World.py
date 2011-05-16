@@ -356,6 +356,9 @@ class World:
         self.screen.addnstr(startY + 1, width + 1, drawModeStr, maxSideBarLen, self.statusLinesAttribute)
         self.screen.addnstr(startY + 2, width + 1, 'MovePts: %d' % (self.currentViewer.getMoveActionDistance() - self.currentViewer.getMoveDistanceThisTurn()), maxSideBarLen, self.statusLinesAttribute)
 
+        currentViewerHPStr = 'HP: %d/%d' % (self.currentViewer.getHP(), self.currentViewer.getMaxHP())
+        self.screen.addnstr(startY + 3, width + 1, currentViewerHPStr, maxSideBarLen, self.currentViewer.getStatusBarHPAttribute())
+
 
     def moveItem(self, item, x, y, newX, newY):
         if (not self.isInBounds(newX, newY)):

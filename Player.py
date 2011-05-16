@@ -1,4 +1,4 @@
-import Creature, Colors, Logger, ToastWrangler, World, Overlay
+import Creature, Colors, Logger, ToastWrangler, World, Overlay, BaseCreatures
 
 class Player(Creature.Creature):
     def __init__(self):
@@ -170,10 +170,10 @@ class Player(Creature.Creature):
                     pass
                     #not a direction
                     #Logger.put('rejected: %d' % (key))
-            elif (key == 66):  #a
-                c = Creature.Creature()
+            if (key == 66):  #B
+                c = BaseCreatures.getGenericCreature()
                 self.world.placeItem(c, 0, 0)
-                self.world.addStatusLine('Added creature to 0 0')
+                self.world.addStatusLine('DEBUG: Added random creature to 0 0')
                 self.world.draw()
 
         

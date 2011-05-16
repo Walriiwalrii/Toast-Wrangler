@@ -90,6 +90,15 @@ class Creature(Item.LocationAwareItem):
             self.fov.do_fov()
         return self.fov.lit(x,y)
 
+    def getStatusBarHPAttribute(self):
+        percentHealth = float(self.getHP())/self.getMaxHP()
+        if (percentHealth <= 0.333):
+            return Colors.getPairNumber('RED', 'BLACK')
+        elif (percentHealth <= 0.666):
+            return Colors.getPairNumber('YELLOW', 'BLACK')
+        else: 
+            return Colors.getPairNumber('GREEN', 'BLACK')
+
     def newLocation(self):
         self.light.changePosition(self.x, self.y)
         self.fov.changePosition(self.x, self.y)
