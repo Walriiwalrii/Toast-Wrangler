@@ -163,12 +163,17 @@ class World:
         return ret
 
     fileGridCharacterToObjectMap = {
+        'b' : BaseGroundTypes.Bush,
         'd' : BaseGroundTypes.Ground,
-        '~' : BaseGroundTypes.Water,
         's' : BaseGroundTypes.Swamp,
         't' : BaseGroundTypes.Tree,
+        '~' : BaseGroundTypes.Water,
+        '#' : BaseGroundTypes.CampFire,
         '*' : BaseGroundTypes.LargeBoulder,
-        'b' : BaseGroundTypes.Bush,
+    }
+
+    fileGridCharacterToLightMap = {
+        '#' : 7 #campfire
     }
 
     def fileGridCharacterToObject(self, char, x, y):        
@@ -176,6 +181,9 @@ class World:
         Logger.put('Looking up: %s = %s' % (char, World.fileGridCharacterToObjectMap[char]))
         obj = World.fileGridCharacterToObjectMap[char](self,x,y)
         return obj
+
+    def fileGridCharacterToLight(self, char, x, y):
+        return World.fileGridCharacterToLightMap.get(char, None)
 
     @staticmethod
     def fileGridZToZ(z):
@@ -214,6 +222,12 @@ class World:
             for x in range(0, self.width):
                 charPopped = cMap.pop(0)
                 self.world[x][y] = self.fileGridCharacterToObject(charPopped,x,y)
+
+                lightIntensity = self.fileGridCharacterToLight(charPopped,x,y)
+                if (lightIntensity != None):
+                    lightObj = FOV.LightMap(self, x, y, lightIntensity)
+                    self.addLightSource(lightObj)
+                    pass
 
         #No more characters should exist in the cMap listing because we added them all to the map.
         assert(len(cMap) == 0)

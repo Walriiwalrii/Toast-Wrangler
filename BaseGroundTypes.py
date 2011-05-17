@@ -16,21 +16,38 @@ class LightAble(WorldState.WorldRepresentation):
     def getZDepthAttribute(self, viewer, globalLighting):
         return self.getLightedAttribute(viewer, globalLighting, self.zDepthAttribute)       
 
+class Bush(LightAble):
+    def __init__(self,world,x,y):
+        LightAble.__init__(self,world,x,y)
+        self.representation = WorldState.WorldRepresentation.convertString(u'\u2663')
+        self.updateColor('GREEN', 'BLACK')
+        self.isWalkable = False
+        self.blocksSight = False
 
 class Ground(LightAble):
     def __init__(self, world, x, y):
         LightAble.__init__(self,world,x,y)
         self.isWalkable = True
-        r = random.randint(0,100)
         self.representation = WorldState.WorldRepresentation.convertString(u'\u2593')
         self.updateColor('YELLOW', 'BLACK')
 
-class Water(LightAble):
-    def __init__(self,world,x,y):
+class LargeBoulder(LightAble):
+    def __init__(self, world,x,y):
         LightAble.__init__(self,world,x,y)
-        self.representation = WorldState.WorldRepresentation.convertString('~') 
         self.isWalkable = False
-        self.updateColor('BLUE', 'BLUE')
+        self.blocksSight = False
+        #self.representation = WorldState.WorldRepresentation.convertString(u'\u2586')
+        self.representation = WorldState.WorldRepresentation.convertString('*')
+        self.updateColor('YELLOW', 'BLACK')
+
+class CampFire(LightAble): 
+    def __init__(self, world,x,y):
+        LightAble.__init__(self,world,x,y)
+        self.isWalkable = True
+        self.blocksSight = False
+        #self.representation = WorldState.WorldRepresentation.convertString(u'\u2586')
+        self.representation = WorldState.WorldRepresentation.convertString('#')
+        self.updateColor('RED', 'YELLOW')
 
 class Swamp(LightAble):
     def __init__(self,world,x,y):
@@ -48,19 +65,11 @@ class Tree(LightAble):
         self.isWalkable = False
         self.blocksSight = True
 
-class Bush(LightAble):
+class Water(LightAble):
     def __init__(self,world,x,y):
         LightAble.__init__(self,world,x,y)
-        self.representation = WorldState.WorldRepresentation.convertString(u'\u2663')
-        self.updateColor('GREEN', 'BLACK')
+        self.representation = WorldState.WorldRepresentation.convertString('~') 
         self.isWalkable = False
-        self.blocksSight = False
+        self.updateColor('BLUE', 'BLUE')
 
-class LargeBoulder(LightAble):
-    def __init__(self, world,x,y):
-        LightAble.__init__(self,world,x,y)
-        self.isWalkable = False
-        self.blocksSight = False
-        #self.representation = WorldState.WorldRepresentation.convertString(u'\u2586')
-        self.representation = WorldState.WorldRepresentation.convertString('*')
-        self.updateColor('YELLOW', 'BLACK')
+

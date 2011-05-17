@@ -15,7 +15,7 @@ class Creature(Item.LocationAwareItem):
         self.attribute = Colors.BOLD | Colors.getPairNumber(self.foreGroundColorName, "BLACK")
         self.inputHandler = InputHandler.KeyboardInputHandler(ToastWrangler.screen)
 
-        self.seeDistance = 10
+        self.seeDistance = 99
         self.fov = None
 
         self.light = None
