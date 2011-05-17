@@ -1,13 +1,15 @@
-import Creature, Colors, Logger, ToastWrangler, World, Overlay, BaseCreatures
+import Creature, Colors, Logger, ToastWrangler, World, Overlay, BaseCreatures, BaseItems
 
-class Player(Creature.Creature):
+class Player(BaseCreatures.CreatureWithInventory):
     def __init__(self):
-        Creature.Creature.__init__(self)
+        BaseCreatures.CreatureWithInventory.__init__(self)
         self.description = 'the player'
         self.representation = '@'
         self.speed = 200
         self.attribute = Colors.getPairNumber("WHITE", "BLACK")
         self.attackOverlay = None
+
+        self.addToInventory(BaseItems.SheriffBadge())
 
     def placeInto(self, world, worldCell, x, y):
         self.attackOverlay = Overlay.CanAttackOverlay(world, self)
@@ -175,8 +177,6 @@ class Player(Creature.Creature):
                 self.world.placeItem(c, 0, 0)
                 self.world.addStatusLine('DEBUG: Added random creature to 0 0')
                 self.world.draw()
-
-        
 
             self.world.draw()
 

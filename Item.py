@@ -15,7 +15,7 @@ class Item:
     def isAlive(self):
         return False
 
-    def getDescription(self, viewer, globalLighting):
+    def getDescription(self, viewer=None, globalLighting=None):
         return self.description
 
     def getRepresentation(self, viewer, globalLighting):
@@ -34,6 +34,13 @@ class Item:
 
     def removeFrom(self, world, worldCell):
         Logger.put('%s removed from its cell' % (self.description))
+
+class InventoryItem(Item):
+    def __init__(self):
+        self.locationChanged = False
+        self.worldCell = None
+    def doesAppearOnMap(self, viewer, globalLighting):
+        return False
 
 class LocationAwareItem(Item):
     def __init__(self):

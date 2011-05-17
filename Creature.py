@@ -30,7 +30,7 @@ class Creature(Item.LocationAwareItem):
         self.verticalAttackDistance = 1
 
     def getHelpDescription(self):
-        return self.description
+        return self.getDescription()
 
     def canAttack(self, x, y):
         if (self.canSee(x,y)):
@@ -40,7 +40,7 @@ class Creature(Item.LocationAwareItem):
                 xCost = 0
             
             zCost = abs(self.worldCell.getZ() - self.world.world[x][y].getZ())
-            if (zCost <= self.verticalAttackDistance and xCost + yCost <= self.horizontalAttackDistance):
+            if (zCost <= self.getVerticalAttackDistance() and xCost + yCost <= self.getHorizontalAttackDistance()):
                 return True
             return False
 
