@@ -15,6 +15,8 @@ class Creature(Item.LocationAwareItem):
         self.attribute = Colors.BOLD | Colors.getPairNumber(self.foreGroundColorName, "BLACK")
         self.inputHandler = InputHandler.KeyboardInputHandler(ToastWrangler.screen)
 
+        self.minimumLightToSeeThreshold = 3
+
         self.seeDistance = 99
         self.fov = None
 
@@ -76,6 +78,9 @@ class Creature(Item.LocationAwareItem):
     def isAlive(self):
         return True
 
+    def getMinimumLightToSeeThreshold(self, x = None, y = None):
+        return self.minimumLightToSeeThreshold 
+
     def getBrightnessThreshold(self, x = None, y = None):
         return 5.0
 
@@ -88,7 +93,10 @@ class Creature(Item.LocationAwareItem):
     def canSee(self, x, y):
         if (self.fov.changed):
             self.fov.do_fov()
-        return self.fov.lit(x,y)
+        isLit = self.fov.lit(x,y)
+        canSee = self.world.getGlobalLightingAt(x, y) >= self.getMinimumLightToSeeThreshold(x,y)
+        return isLit and canSee 
+        #return self.fov.lit(x,y)
 
     def getStatusBarHPAttribute(self):
         percentHealth = float(self.getHP())/self.getMaxHP()

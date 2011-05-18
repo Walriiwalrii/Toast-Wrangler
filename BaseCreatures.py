@@ -44,6 +44,9 @@ class Bandito(CreatureWithInventory):
         w = BaseItems.Revolver()
         self.addToInventory(w)
         self.setWeapon(w)
+        "Banditos can see in the dark pretty well."
+        self.minimumLightToSeeThreshold = self.minimumLightToSeeThreshold - 1
+
 
 class Outlaw(CreatureWithInventory):
     def __init__(self):
@@ -52,4 +55,5 @@ class Outlaw(CreatureWithInventory):
         self.representation = 'T'
         self.speed = 220
         self.attribute = Colors.getPairNumber("RED", "BLACK")
-
+        "Outlaws cannot see in the dark well."
+        self.minimumLightToSeeThreshold = self.minimumLightToSeeThreshold + 1
