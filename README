@@ -51,11 +51,9 @@ bring up a nifty attack overlay system.
 
 Lighting is also very important, as the game takes place entirely at night.
 Each character carries a lantern with him or her (this will be changed later).
-This let's the character see the area around him/her. Clearly lit areas are
-bright in color. Poorly lit areas are duller in color. Currently, if a
-character has a clear line of sight to an area, he or she can always see it.
-Just imagine that there's enough moonlight to murkily make out trees/rocks in
-the distance.
+This let's the character see the area around him/her. Press 'l' to toggle the
+lantern being on or off. Clearly lit areas are bright in color. Poorly lit
+areas are duller in color. 
 
 Some things in the world naturally let out light. Currently, campfires emit a
 small light that illuminates nearby items/creatures/ground.
