@@ -156,6 +156,11 @@ class World:
         assert (not fovObj in self.lightSources)
         self.lightSources.append(fovObj)
 
+    def removeLightSource(self, lightFovObj):
+        "Remove the specified light source and recalculate lighting."
+        self.lightSources.remove(lightFovObj)
+        self.prepareForDraw()
+
     def getGlobalLightingAt(self, x, y):
         ret = 0.0
         for l in self.lightSources:

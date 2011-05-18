@@ -14,17 +14,18 @@ screen = None
 
 shouldQuit = False
 
-quitKey     = 81 #capital 'Q'
+quitKey         = ord('Q') 
 
-zModeKey    = ord('z')
-tabKey      = ord('\t')
-attackKey   = ord('a')
+zModeKey        = ord('z')
+tabKey          = ord('\t')
+attackKey       = ord('a')
 
-enterKey    = ord('\n')
-spaceKey    = ord(' ')
+enterKey        = ord('\n')
+spaceKey        = ord(' ')
 
-helpKey     = ord('/')
-qKey        = ord('q')
+helpKey         = ord('/')
+qKey            = ord('q')
+lightToggleKey  = ord('l')
 
 def setQuit(quitStatus = True):
     global shouldQuit

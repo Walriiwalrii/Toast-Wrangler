@@ -87,9 +87,6 @@ class Creature(Item.LocationAwareItem):
     def getLocation(self):
         return (self.x, self.y)
 
-    def getLightAt(self, x, y):
-        return self.light.square(x,y)
-
     def canSee(self, x, y):
         if (self.fov.changed):
             self.fov.do_fov()
@@ -108,20 +105,51 @@ class Creature(Item.LocationAwareItem):
             return Colors.getPairNumber('GREEN', 'BLACK')
 
     def newLocation(self):
-        self.light.changePosition(self.x, self.y)
+        if (self.light != None):
+            self.light.changePosition(self.x, self.y)
         self.fov.changePosition(self.x, self.y)
         Item.LocationAwareItem.newLocation(self)
 
+    def lightIsOn(self):
+            return self.light != None
+
+    def togglePersonalLight(self):
+        if (self.lightIsOn()):
+            self.turnLightOff()
+        else:
+            self.turnLightOn()
+
+
+    def turnLightOn(self):
+        if (self.light != None):
+            Logger.put('Warning: %s.turnLightOn() but light already on.' % (str(self)))
+        self.light = self.makeNewLight()
+        self.world.addLightSource(self.light)
+
+    def turnLightOff(self):
+        if (self.light == None):
+            Logger.put('Warning: %s.turnLightOff() but light already off.' % (str(self)))
+        self.world.removeLightSource(self.light)
+        self.light = None
+
+    def makeNewLight(self):
+        return FOV.LightMap(self.world, self.x, self.y, 10.0)
+
     def placeInto(self, world, worldCell, x, y):
         Logger.put('%s was placed into %d,%d' % (self.getDescription(None, None), x, y))
+
         if (not world == self.world):
             self.world = world
             self.fov = FOV.LightMap(self.world, x, y, self.seeDistance)
-            self.light = FOV.LightMap(self.world, x, y, 10.0)
-            self.world.addLightSource(self.light)
+            #Dirty hack: set self.x and self.y so that turnLightOn
+            #knows where in the world the light is. 
+            self.x = x
+            self.y = y
+            #END HACK
+            self.turnLightOn()
             self.world.addEventCallback(self.speed, self.doThink, self)
-
         Item.LocationAwareItem.placeInto(self, world, worldCell, x, y)
+
         
 
     def moveTo(self, destX, destY):
