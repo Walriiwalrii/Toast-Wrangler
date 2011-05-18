@@ -32,7 +32,20 @@ class CreatureWithInventory(Creature.Creature):
 
     def setWeapon(self, weapon):
         assert(weapon in self.getInventory())
+        assert(isinstance(weapon, BaseItems.Weapon))
         self.weapon = weapon
+
+    def getHorizontalAttackDistance(self):
+        if (self.weapon == None):
+            return Creature.Creature.getHorizontalAttackDistance(self)
+        else:
+            return self.weapon.getHorizontalAttackDistance()
+
+    def getVerticalAttackDistance(self):
+        if (self.weapon == None):
+            return Creature.Creature.getHorizontalAttackDistance(self)
+        else: 
+            return self.weapon.getVerticalAttackDistance()
 
 class Bandito(CreatureWithInventory):
     def __init__(self):

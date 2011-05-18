@@ -10,6 +10,9 @@ class Player(BaseCreatures.CreatureWithInventory):
         self.attackOverlay = None
 
         self.addToInventory(BaseItems.SheriffBadge())
+        w = BaseItems.Revolver()
+        self.addToInventory(w)
+        self.setWeapon(w)
 
     def placeInto(self, world, worldCell, x, y):
         self.attackOverlay = Overlay.CanAttackOverlay(world, self)
