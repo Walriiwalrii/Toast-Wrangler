@@ -101,11 +101,8 @@ class Player(BaseCreatures.CreatureWithInventory):
         self.startTurn()
 
         retVal = False
-        didAttack = False
-        doneMoving = not (self.moveActionDistance > 0)
 
-
-        while (not didAttack or not doneMoving):
+        while (not self.isDoneAttacking() or not self.isDoneMoving()):
             self.world.setViewer(self)
 
             self.world.draw()
@@ -113,8 +110,10 @@ class Player(BaseCreatures.CreatureWithInventory):
             Logger.put('%s is thinking...' % (self.description))
             key = self.inputHandler.waitForKey()
             if (key == ToastWrangler.enterKey or key == ord('.')): #skip turn
-                didAttack = doneMoving = True
+                self.setIsDoneMoving()
+                self.setIsDoneAttacking()
                 continue
+
             Logger.put('found; %d, help = %d' % (key, ToastWrangler.helpKey))
             if (key == ToastWrangler.lightToggleKey):
                 self.togglePersonalLight()
@@ -124,7 +123,7 @@ class Player(BaseCreatures.CreatureWithInventory):
             elif (self.keysAvailableAnytime(key)):
                 self.world.draw()
                 continue
-            elif (not didAttack and key == ToastWrangler.attackKey):
+            elif (not self.isDoneAttacking() and key == ToastWrangler.attackKey):
                 overlayOn = False
                 self.attackOverlay.setCursorPosition(self.x, self.y)
                 self.world.setOverlay(self.attackOverlay)
@@ -154,12 +153,12 @@ class Player(BaseCreatures.CreatureWithInventory):
 
                 self.world.setDefaultOverlay()
                 if (key != ToastWrangler.attackKey):
-                    didAttack = True
+                    self.setIsDoneAttacking()
                     self.world.addStatusLine('You attacked (%d, %d)' %  (self.attackOverlay.cursorPosX, self.attackOverlay.cursorPosY))
                 
             elif (key == ToastWrangler.quitKey):
                 return retVal
-            elif (not doneMoving):
+            elif (not self.isDoneMoving()):
                 try:
                     self.keysAvailableAnytime(key)
                     dir = self.inputHandler.keyToOffset(key)
@@ -170,8 +169,6 @@ class Player(BaseCreatures.CreatureWithInventory):
                         if (futureMoveCost <= self.moveActionDistance):
                             if (self.moveTo(self.x+dir[0], self.y+dir[1])):
                                 self.moveDistanceThisTurn+=moveCost
-                                if (self.moveDistanceThisTurn >= self.moveActionDistance):
-                                    doneMoving = True
 
                 except ValueError:
                     pass

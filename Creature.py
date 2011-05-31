@@ -25,6 +25,8 @@ class Creature(Item.LocationAwareItem):
         self.moveActionDistance = 3
         self.moveDistanceThisTurn = 0
 
+        self.didAttack = False
+
         self.maxHP = 10
         self.hp = 10
 
@@ -71,6 +73,7 @@ class Creature(Item.LocationAwareItem):
 
     def startTurn(self):
         self.moveDistanceThisTurn = 0
+        self.didAttack = False
 
     def endTurn(self):
         pass
@@ -119,6 +122,17 @@ class Creature(Item.LocationAwareItem):
         else:
             self.turnLightOn()
 
+    def isDoneAttacking(self):
+        return self.didAttack
+
+    def setIsDoneAttacking(self):
+        self.didAttack = True
+
+    def isDoneMoving(self):
+        return self.moveDistanceThisTurn >= self.moveActionDistance
+
+    def setIsDoneMoving(self):
+        self.moveDistanceThisTurn = self.moveActionDistance
 
     def turnLightOn(self):
         if (self.light != None):
