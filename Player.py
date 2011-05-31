@@ -165,10 +165,9 @@ class Player(BaseCreatures.CreatureWithInventory):
     
                     if (self.world.isInBounds(self.x + dir[0], self.y + dir[1])):
                         moveCost = self.worldCell.getMoveCost(self.world.getWorldCell(self.x + dir[0], self.y + dir[1]))
-                        futureMoveCost = moveCost + self.moveDistanceThisTurn
-                        if (futureMoveCost <= self.moveActionDistance):
+                        if (self.canPerformMoveAction(moveCost)):
                             if (self.moveTo(self.x+dir[0], self.y+dir[1])):
-                                self.moveDistanceThisTurn+=moveCost
+                                self.doMoveAction(moveCost)
 
                 except ValueError:
                     pass

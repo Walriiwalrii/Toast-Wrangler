@@ -33,6 +33,8 @@ class Creature(Item.LocationAwareItem):
         self.horizontalAttackDistance = 1
         self.verticalAttackDistance = 1
 
+        self.toggleLightCost = 1
+
     def getHelpDescription(self):
         return self.getDescription()
 
@@ -113,14 +115,23 @@ class Creature(Item.LocationAwareItem):
         self.fov.changePosition(self.x, self.y)
         Item.LocationAwareItem.newLocation(self)
 
+    def canPerformMoveAction(self, futureCost):
+        return self.moveDistanceThisTurn + futureCost <= self.moveActionDistance
+
     def lightIsOn(self):
             return self.light != None
 
     def togglePersonalLight(self):
-        if (self.lightIsOn()):
-            self.turnLightOff()
-        else:
-            self.turnLightOn()
+        if (self.canPerformMoveAction(self.toggleLightCost)):
+            if (self.lightIsOn()):
+                self.turnLightOff()
+            else:
+                self.turnLightOn()
+            self.doMoveAction(self.toggleLightCost)
+
+    def doMoveAction(self, moveCost):
+        assert(self.canPerformMoveAction(moveCost))
+        self.moveDistanceThisTurn += moveCost
 
     def isDoneAttacking(self):
         return self.didAttack
