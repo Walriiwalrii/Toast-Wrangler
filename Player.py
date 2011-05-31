@@ -128,10 +128,8 @@ class Player(BaseCreatures.CreatureWithInventory):
                 self.attackOverlay.setCursorPosition(self.x, self.y)
                 self.world.setOverlay(self.attackOverlay)
                 self.world.draw()
-                key = self.inputHandler.pauseForKey()
-                if (self.keysAvailableAnytime(key)):
-                    self.world.draw()
-                    continue
+
+                key = None
 
                 attackModeQuitKeys = [ToastWrangler.attackKey, ToastWrangler.enterKey, ToastWrangler.spaceKey]
                 while (not key in attackModeQuitKeys):

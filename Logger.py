@@ -1,3 +1,5 @@
+import sys
+
 outFile = None
 
 def init():
@@ -6,3 +8,9 @@ def init():
 
 def put(str = ''):
     outFile.write(str + '\n')
+
+def fatal(str = ''):
+    msg = 'FATAL ERROR ' + str
+    sys.stderr.write(msg)
+    put(msg)
+    sys.exit(1)

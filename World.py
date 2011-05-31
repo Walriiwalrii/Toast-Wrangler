@@ -1,6 +1,6 @@
 import curses, heapq, random, sys, copy
 
-import WorldState, Logger, ToastWrangler, Item, Creature, Player, BaseGroundTypes, FOV, Colors, Overlay
+import WorldState, Logger, ToastWrangler, Item, Creature, Player, BaseGroundTypes, FOV, Colors, Overlay, BaseCreatures
 
 class TeamViewer:
     INFINITY = 9999
@@ -252,6 +252,35 @@ class World:
 
         Logger.put('World len = %d' % (len(self.world)))
         Logger.put('World[0] len = %d' % (len(self.world[0])))
+
+        line = f.readline().strip()
+        assert(line == '') #blankline
+
+        #Now see how many creatures are in this map.
+        numCreatures = int(f.readline().strip())
+
+        assert(numCreatures >= 0)
+
+        Logger.put('World will add %d creatures to the map.' % numCreatures)
+
+        for i in range(0, numCreatures):
+            line = f.readline().strip()
+            toks = line.split(' ')
+            assert(len(toks) == 3)
+            x = int(toks[0])
+            y = int(toks[1])
+            creatureType = toks[2]
+
+            Logger.put('World will add %s creature to (%d, %d)' % (creatureType, x, y))
+            if (not creatureType.isalpha()):
+                Logger.fatal('creature type found in map is not alphabetic: %s' % (creatureType))
+            try:
+                creature = eval('BaseCreatures.%s()' % (creatureType))
+            except AttributeError as ae:
+                Logger.fatal('Likely invalid creature name: %s (%s)' % (creatureType, str(ae)))
+
+            self.placeItem(creature, x, y)
+            pass
 
         f.close()
 
