@@ -114,7 +114,6 @@ class Player(BaseCreatures.CreatureWithInventory):
                 self.setIsDoneAttacking()
                 continue
 
-            Logger.put('found; %d, help = %d' % (key, ToastWrangler.helpKey))
             if (key == ToastWrangler.lightToggleKey):
                 self.togglePersonalLight()
             elif (key == ToastWrangler.helpKey):
