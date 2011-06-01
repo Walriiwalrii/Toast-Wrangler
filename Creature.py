@@ -92,6 +92,18 @@ class Creature(Item.LocationAwareItem):
     def getLocation(self):
         return (self.x, self.y)
 
+    def getFullCanSeeList(self):
+        #return a list of (x,y) tuples
+        #where each (x,y) tuple is a square that the Creature can see
+        worldDims = self.world.getDimensions()
+        canSeeList = []
+        for x in range(0,worldDims[0]):
+            for y in range(0, worldDims[1]):
+                if (self.canSee(x,y)):
+                    canSeeList.append((x,y))
+
+        return canSeeList
+
     def canSee(self, x, y):
         if (self.fov.changed):
             self.fov.do_fov()
@@ -195,6 +207,7 @@ class Creature(Item.LocationAwareItem):
         #Logger.put('%s wants to move: (%d,%d)' % (self.description, dir[0], dir[1]))
         #self.world.moveItem(self, self.x, self.y, self.x + dir[0], self.y + dir[1])
         self.world.addEventCallback(self.speed, self.doThink, self)
+
         self.world.draw()
         curses.napms(200)
 
