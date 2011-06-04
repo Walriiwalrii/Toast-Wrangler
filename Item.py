@@ -1,6 +1,6 @@
 import World, ToastWrangler, InputHandler, Logger
 
-class Item:
+class Item(object):
     def __init__(self):
         self.mass = 1
         self.description = 'uninherited-from item'
@@ -30,10 +30,11 @@ class Item:
     def placeInto(self, world, worldCell, x, y):
         self.x = x
         self.y = y
-        Logger.put('%s placed into %d,%d' % (self.description, x, y))
+        #Logger.put('%s placed into %d,%d' % (self.description, x, y))
 
     def removeFrom(self, world, worldCell):
-        Logger.put('%s removed from its cell' % (self.description))
+        #Logger.put('%s removed from its cell' % (self.description))
+        pass
 
 class InventoryItem(Item):
     def __init__(self):
@@ -58,7 +59,6 @@ class LocationAwareItem(Item):
         self.worldCell = worldCell
 
         if (x != origX or y != origY):
-            Logger.put('placeInto')
             self.locationChanged = True
             self.newLocation()
 

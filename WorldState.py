@@ -4,7 +4,7 @@ import string
 
 import ToastWrangler
 
-class WorldRepresentation:
+class WorldRepresentation(object):
     #Default is a static world cell
 
     @staticmethod

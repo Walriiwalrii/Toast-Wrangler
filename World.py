@@ -331,7 +331,7 @@ class World:
     def processNextEvent(self):
         if (self.eventHeap):
             nextEvent = heapq.heappop(self.eventHeap)
-            Logger.put("Time: was %d now is %d: %s" % (self.time, nextEvent[0], str(nextEvent)))
+            #Logger.put("Time: was %d now is %d: %s" % (self.time, nextEvent[0], str(nextEvent)))
             assert(self.time <= nextEvent[0])
             self.time = nextEvent[0]
             if (nextEvent[1]() == True):
@@ -370,6 +370,10 @@ class World:
         self.statusLines.append(string)
         self.statusOffset = max(len(self.statusLines) - self.statusLinesHeight, 0)
         pass
+
+    def addStatusLineIfPlayer(self, creature, string):
+        if (creature.getTeam() == ToastWrangler.PLAYER_TEAM):
+            self.addStatusLine(string)
 
     def drawStatusRegion(self):
         maxSideBarLen = 11

@@ -1,5 +1,5 @@
 import curses
-import Logger, Item, Colors, InputHandler, ToastWrangler, FOV
+import Logger, Item, Colors, InputHandler, ToastWrangler, FOV, Behavior
 import copy
 
 class Creature(Item.LocationAwareItem):
@@ -35,11 +35,22 @@ class Creature(Item.LocationAwareItem):
 
         self.toggleLightCost = 1
 
+        self.team = 0
+
+    def setTeam(self, newTeam):
+        self.team = newTeam
+
+    def getTeam(self):
+        return self.team
+
     def getHelpDescription(self):
         return self.getDescription()
 
+    def targetIsAttackable(self, creature):
+        return (creature.getTeam() != self.getTeam() and isinstance(creature,Creature))
+
     def canAttack(self, x, y):
-        if (self.canSee(x,y)):
+        if (self.canSee(x,y)): #For now, can only attack creatures
             xCost = abs(self.x - x)
             yCost = abs(self.y - y)
             if (xCost == 1 and yCost == 1): #diagonal
@@ -140,6 +151,9 @@ class Creature(Item.LocationAwareItem):
             else:
                 self.turnLightOn()
             self.doMoveAction(self.toggleLightCost)
+        else:
+            self.world.addStatusLineIfPlayer(self, 'Toggling the light requires %0.1f move points.' % (float(self.toggleLightCost)))
+            pass
 
     def doMoveAction(self, moveCost):
         assert(self.canPerformMoveAction(moveCost))
@@ -173,7 +187,7 @@ class Creature(Item.LocationAwareItem):
         return FOV.LightMap(self.world, self.x, self.y, 10.0)
 
     def placeInto(self, world, worldCell, x, y):
-        Logger.put('%s was placed into %d,%d' % (self.getDescription(None, None), x, y))
+        #Logger.put('%s was placed into %d,%d' % (self.getDescription(None, None), x, y))
 
         if (not world == self.world):
             self.world = world
@@ -198,14 +212,11 @@ class Creature(Item.LocationAwareItem):
     def doThink(self):
         dir = InputHandler.InputHandler.getRandomDirection()
         self.moveTo(self.x + dir[0], self.y + dir[1])
-        #Logger.put('%s is thinking...' % (self.description))
-        #key = self.inputHandler.getDirection()
-        #if (key == 27):
-        #   return
+       
+        #Eventually, the behavior should become a property/field in the Creature.            
+        behavior = Behavior.AttackNearest(self)
+        behavior.doAction()
 
-        #dir = self.inputHandler.keyToOffset(key)
-        #Logger.put('%s wants to move: (%d,%d)' % (self.description, dir[0], dir[1]))
-        #self.world.moveItem(self, self.x, self.y, self.x + dir[0], self.y + dir[1])
         self.world.addEventCallback(self.speed, self.doThink, self)
 
         self.world.draw()

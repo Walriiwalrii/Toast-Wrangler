@@ -14,6 +14,8 @@ class Player(BaseCreatures.CreatureWithInventory):
         self.addToInventory(w)
         self.setWeapon(w)
 
+        self.setTeam(ToastWrangler.PLAYER_TEAM)
+
     def placeInto(self, world, worldCell, x, y):
         self.attackOverlay = Overlay.CanAttackOverlay(world, self)
         Creature.Creature.placeInto(self, world, worldCell, x, y)
@@ -160,16 +162,16 @@ class Player(BaseCreatures.CreatureWithInventory):
                     self.keysAvailableAnytime(key)
                     dir = self.inputHandler.keyToOffset(key)
     
+                except ValueError:
+                    pass
+                else:
                     if (self.world.isInBounds(self.x + dir[0], self.y + dir[1])):
                         moveCost = self.worldCell.getMoveCost(self.world.getWorldCell(self.x + dir[0], self.y + dir[1]))
                         if (self.canPerformMoveAction(moveCost)):
                             if (self.moveTo(self.x+dir[0], self.y+dir[1])):
                                 self.doMoveAction(moveCost)
 
-                except ValueError:
-                    pass
-                    #not a direction
-                    #Logger.put('rejected: %d' % (key))
+
             if (key == 66):  #B
                 c = BaseCreatures.getGenericCreature()
                 self.world.placeItem(c, 0, 0)
