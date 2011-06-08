@@ -1,4 +1,5 @@
 import Creature, Colors, Logger, ToastWrangler, World, Overlay, BaseCreatures, BaseItems
+import time, random
 
 class Player(BaseCreatures.CreatureWithInventory):
     def __init__(self):
@@ -132,9 +133,15 @@ class Player(BaseCreatures.CreatureWithInventory):
 
                 key = None
 
+                previousMeasureTime = time.time()
+
                 attackModeQuitKeys = [ToastWrangler.attackKey, ToastWrangler.enterKey, ToastWrangler.spaceKey]
                 while (not key in attackModeQuitKeys):
-                    key = self.inputHandler.pauseForKey()
+                    nowTime = time.time()
+                    key = self.inputHandler.pauseForKey(self.inputHandler.getDefaultPauseTime() - (nowTime - previousMeasureTime))
+
+                    previousMeasureTime = nowTime
+
                     self.keysAvailableAnytime(key)
     
                     try:
@@ -152,8 +159,12 @@ class Player(BaseCreatures.CreatureWithInventory):
 
                 self.world.setDefaultOverlay()
                 if (key != ToastWrangler.attackKey):
+                    x, y = self.attackOverlay.cursorPosX, self.attackOverlay.cursorPosY
                     self.setIsDoneAttacking()
-                    self.world.addStatusLine('You attacked (%d, %d)' %  (self.attackOverlay.cursorPosX, self.attackOverlay.cursorPosY))
+                    self.world.addStatusLine('You attacked (%d, %d)' %  (x, y))
+                    targets = self.world.getAttackableCreaturesInCell(x, y, self)
+                    if (len(targets)>0):
+                        self.doAttack(random.choice(targets))
                 
             elif (key == ToastWrangler.quitKey):
                 return retVal

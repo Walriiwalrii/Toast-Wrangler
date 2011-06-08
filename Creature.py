@@ -33,9 +33,14 @@ class Creature(Item.LocationAwareItem):
         self.horizontalAttackDistance = 1
         self.verticalAttackDistance = 1
 
+        self.attackDamage = 1
+
         self.toggleLightCost = 1
 
         self.team = 0
+
+    def getAttackDamage(self, target):
+        return self.attackDamage
 
     def setTeam(self, newTeam):
         self.team = newTeam
@@ -43,8 +48,16 @@ class Creature(Item.LocationAwareItem):
     def getTeam(self):
         return self.team
 
+    def getHealthDescriptionAdjective(self):
+        healthPercentage = float(self.hp) / self.maxHP
+
+        for percentage, adjective in zip([0.10, 0.8, 0.9], ['mortally wounded', 'wounded', 'scratched']):
+            if (healthPercentage <= percentage):
+                return adjective + ' '
+        return ''
+
     def getHelpDescription(self):
-        return self.getDescription()
+        return self.getHealthDescriptionAdjective() + self.getDescription()
 
     def targetIsAttackable(self, creature):
         return (creature.getTeam() != self.getTeam() and isinstance(creature,Creature))
@@ -60,6 +73,9 @@ class Creature(Item.LocationAwareItem):
             if (zCost <= self.getVerticalAttackDistance() and xCost + yCost <= self.getHorizontalAttackDistance()):
                 return True
             return False
+
+    def getWorld(self):
+        return self.world
 
     def getHorizontalAttackDistance(self):
         return self.horizontalAttackDistance
@@ -214,7 +230,7 @@ class Creature(Item.LocationAwareItem):
         self.moveTo(self.x + dir[0], self.y + dir[1])
        
         #Eventually, the behavior should become a property/field in the Creature.            
-        behavior = Behavior.AttackNearest(self)
+        behavior = Behavior.PerhapsAttackNearest(self)
         behavior.doAction()
 
         self.world.addEventCallback(self.speed, self.doThink, self)
@@ -222,3 +238,13 @@ class Creature(Item.LocationAwareItem):
         self.world.draw()
         curses.napms(200)
 
+    def takeDamage(self, damage, attacker):
+        self.hp = max(self.hp - damage, 1)
+        
+
+    def doAttack(self, target):
+        damage = self.getAttackDamage(target)
+        target.takeDamage(damage, self)
+
+        if (not self.getWorld().addStatusLineIfPlayer(self,'The attack did %d damage.' % (damage))):
+            self.getWorld().addStatusLine('The attack to you did %d damage.' % (damage))

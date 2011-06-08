@@ -50,7 +50,7 @@ class CreatureWithInventory(Creature.Creature):
 class Bandito(CreatureWithInventory):
     def __init__(self):
         CreatureWithInventory.__init__(self)
-        self.description = 'a thieving bandito'
+        self.description = 'thieving bandito'
         self.representation = 'B'
         self.speed = 180
         self.attribute = Colors.getPairNumber("YELLOW", "BLACK")
@@ -64,7 +64,7 @@ class Bandito(CreatureWithInventory):
 class Outlaw(CreatureWithInventory):
     def __init__(self):
         CreatureWithInventory.__init__(self)
-        self.description = 'an outlaw'
+        self.description = 'outlaw'
         self.representation = 'T'
         self.speed = 220
         self.attribute = Colors.getPairNumber("RED", "BLACK")

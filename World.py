@@ -374,6 +374,8 @@ class World:
     def addStatusLineIfPlayer(self, creature, string):
         if (creature.getTeam() == ToastWrangler.PLAYER_TEAM):
             self.addStatusLine(string)
+            return True #Let the caller know that we added a status line
+        return False
 
     def drawStatusRegion(self):
         maxSideBarLen = 11
@@ -408,7 +410,10 @@ class World:
         self.screen.addnstr(startY + 1, width + 1, drawModeStr, maxSideBarLen, self.statusLinesAttribute)
         self.screen.addnstr(startY + 2, width + 1, 'MovePts: %d' % (self.currentViewer.getMoveActionDistance() - self.currentViewer.getMoveDistanceThisTurn()), maxSideBarLen, self.statusLinesAttribute)
 
+        #Generate HP string and pad with spaces
         currentViewerHPStr = 'HP: %d/%d' % (self.currentViewer.getHP(), self.currentViewer.getMaxHP())
+        currentViewerHPStr = currentViewerHPStr + ' ' * (maxSideBarLen - len(currentViewerHPStr))
+
         self.screen.addnstr(startY + 3, width + 1, currentViewerHPStr, maxSideBarLen, self.currentViewer.getStatusBarHPAttribute())
 
 
@@ -418,6 +423,13 @@ class World:
         self.world[x][y].removeItem(item)
         self.world[newX][newY].addItem(item, newX, newY)
         return True
+
+    def getAttackableCreaturesInCell(self, x,y, attacker):
+        attackables = []
+        for c in self.getWorldCell(x,y).getContents():
+            if (attacker.targetIsAttackable(c)):
+                attackables.append(c)
+        return attackables
 
     @staticmethod
     def zHeightToCharacter(z):

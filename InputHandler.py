@@ -71,6 +71,10 @@ class InputHandler:
 class KeyboardInputHandler(InputHandler):
     def __init__(self, screen):
         InputHandler.__init__(self, screen)
+        self.defaultPauseTime = 500 #500ms
+
+    def getDefaultPauseTime(self):
+        return self.defaultPauseTime
 
     def waitForKey(self):
         self.screen.nodelay(0)
@@ -78,7 +82,11 @@ class KeyboardInputHandler(InputHandler):
         self.screen.nodelay(1)
         return ret
 
-    def pauseForKey(self, pauseTime = 500): #pauseTime in milliseconds
+    def pauseForKey(self, pauseTime = None): #pauseTime in milliseconds
+    
+        if (pauseTime == None):
+            pauseTime = self.defaultPauseTime
+
         assert(pauseTime >= 100 and pauseTime <= 255 * 100)
         self.screen.nodelay(1)
         curses.halfdelay(int(pauseTime / 100))

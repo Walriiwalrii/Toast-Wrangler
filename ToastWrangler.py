@@ -27,7 +27,7 @@ helpKey         = ord('/')
 qKey            = ord('q')
 lightToggleKey  = ord('l')
 
-PLAYER_TEAM     = 999
+PLAYER_TEAM     = -1
 
 def setQuit(quitStatus = True):
     global shouldQuit
