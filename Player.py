@@ -161,7 +161,6 @@ class Player(BaseCreatures.CreatureWithInventory):
                 if (key != ToastWrangler.attackKey):
                     x, y = self.attackOverlay.cursorPosX, self.attackOverlay.cursorPosY
                     self.setIsDoneAttacking()
-                    self.world.addStatusLine('You attacked (%d, %d)' %  (x, y))
                     targets = self.world.getAttackableCreaturesInCell(x, y, self)
                     if (len(targets)>0):
                         self.doAttack(random.choice(targets))

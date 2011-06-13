@@ -12,7 +12,8 @@ Quick Directions:
 Tab                : switch views (from single unit view to team view)
 z                  : switch depth view mode (view terrain height/appearance)
 up/down/left/right : move a unit 1 square (numpad also works)
-a                  : attack a unit (direction keys to aim)
+a                  : attack a unit (direction keys to aim, a again to cancel)
+l                  : toggle light (on or off)
 . or enter         : end current unit's turn
 /                  : help (figure out what the text symbols mean)
 Q                  : quit (case sensitive)

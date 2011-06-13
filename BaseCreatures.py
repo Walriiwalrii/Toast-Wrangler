@@ -11,11 +11,12 @@ def getGenericCreature():
 class CreatureWithInventory(Creature.Creature):
     def __init__(self):
         Creature.Creature.__init__(self)
+        self.noInventoryItem = BaseItems.Fists()
         self.inventory = []
-        self.weapon = None
+        self.weapon = self.noInventoryItem
 
     def getHelpDescription(self):
-        if (self.weapon == None):
+        if (self.weapon == self.noInventoryItem):
             return Creature.Creature.getHelpDescription(self)
         else:
             return Creature.Creature.getHelpDescription(self) + ' carrying ' + self.weapon.getDescription()
@@ -36,16 +37,10 @@ class CreatureWithInventory(Creature.Creature):
         self.weapon = weapon
 
     def getHorizontalAttackDistance(self):
-        if (self.weapon == None):
-            return Creature.Creature.getHorizontalAttackDistance(self)
-        else:
-            return self.weapon.getHorizontalAttackDistance()
+        return self.weapon.getHorizontalAttackDistance()
 
     def getVerticalAttackDistance(self):
-        if (self.weapon == None):
-            return Creature.Creature.getHorizontalAttackDistance(self)
-        else: 
-            return self.weapon.getVerticalAttackDistance()
+        return self.weapon.getVerticalAttackDistance()
 
 class Bandito(CreatureWithInventory):
     def __init__(self):

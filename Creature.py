@@ -1,6 +1,6 @@
 import curses
 import Logger, Item, Colors, InputHandler, ToastWrangler, FOV, Behavior
-import copy
+import copy, random
 
 class Creature(Item.LocationAwareItem):
     def __init__(self):
@@ -243,8 +243,19 @@ class Creature(Item.LocationAwareItem):
         
 
     def doAttack(self, target):
-        damage = self.getAttackDamage(target)
-        target.takeDamage(damage, self)
+        #see if the attack hits
+        accuracy = self.getWeapon().getBaseAccuracy()
 
-        if (not self.getWorld().addStatusLineIfPlayer(self,'The attack did %d damage.' % (damage))):
-            self.getWorld().addStatusLine('The attack to you did %d damage.' % (damage))
+        self.getWorld().addAppropriateStatusLine(self,
+                'You (%s) attacked %s.' % (self.getDescription(), target.getDescription()),
+                '%s attacked you (%s).' % (self.getDescription(), target.getDescription()))
+
+        if (accuracy == 1 or random.random() <= accuracy):
+            damage = self.getAttackDamage(target)
+            target.takeDamage(damage, self)
+
+            self.getWorld().addAppropriateStatusLine(self,
+                    'The attack did %d damage.' % (damage),
+                    'The attack to you did %d damage.' % (damage))
+        else:
+            self.getWorld().addStatusLine('The attack missed!')

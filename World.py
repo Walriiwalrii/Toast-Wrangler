@@ -366,6 +366,10 @@ class World:
     def placeItem(self, item, itemX = 0, itemY = 0):
         self.world[itemX][itemY].addItem(item, itemX, itemY)
 
+    def addAppropriateStatusLine(self, creature, stringIfPlayer, stringIfNotPlayer):
+        if (not self.addStatusLineIfPlayer(creature, stringIfPlayer)):
+            self.addStatusLine(stringIfNotPlayer)
+
     def addStatusLine(self, string):
         self.statusLines.append(string)
         self.statusOffset = max(len(self.statusLines) - self.statusLinesHeight, 0)

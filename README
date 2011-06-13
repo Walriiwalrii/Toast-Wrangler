@@ -7,8 +7,8 @@
 
 
 Toast Wrangler is a turn-based strategy/tactical RPG. It uses only curses
-graphics and has a wild west theme. There's a heavy emphasis on line of sight
-and lighting.
+graphics and has a wild west theme. There is/will be a heavy emphasis on line of
+sight and lighting.
 
 This game will require a UTF-8 capable terminal. I use gnome-terminal, in
 Ubuntu 11.04.
@@ -23,34 +23,33 @@ This game is not complete. But, here's what you can do:
 
 Then, know that you control a team of 2 character. You first move one character
 (optionally attacking), then the next, then the first again, and so on. Use the
-arrow keys to move the current player. The number of 'move points' left for
-that character is displayed in the lower right corner. When it reaches 0, the
+arrow keys to move the current player. The number of 'move points' left for that
+character is displayed in the lower right corner. When it reaches 0, the
 character may not move (but may attack if he/she has not yet done so). If a
 character can perform no more actions, you will automatically be switched to
 controlling the next character.
 
-There is a heavy emphasis on line-of-sight. The default view is to show no more
-or no less than what the current player can see. This is known as 'individual
-view,' because it is the view of the individual character. Press TAB to switch
-back and forth between individual view and 'team view.' Team view shows
-anything that any player-controlled characters can see.
+There is/will be a heavy emphasis on line-of-sight. The default view is to show
+no more or no less than what the current player can see. This is known as
+'individual view,' because it is the view of the individual character. Press TAB
+to switch back and forth between individual view and 'team view.' Team view
+shows anything that any player-controlled characters can see.
 
-For example, if your first character is behind a tree, he or she cannot see
-past the tree. There might be deadly outlaws on the other side of the tree!
-However, if another player-controlled character is past the tree, and team view
-is on, then the player (probably) can see what danger lurks around the tree.
-Team view let's you more easily coordinate the actions of characters, without
-exposing yourself to danger or wasting move points peeking around corners.
+For example, if your first character is behind a tree, he or she cannot see past
+the tree. There might be deadly outlaws on the other side of the tree!  However,
+if another player-controlled character is past the tree, and team view is on,
+then the player (probably) can see what danger lurks around the tree.  Team view
+let's you more easily coordinate the actions of characters, without exposing
+yourself to danger or wasting move points peeking around corners.
 
 When making decisions about who to attack*, be sure to use individual view.
 After all, if the current character cannot properly see the target, even if
-another teammate can, then the current character cannot attack the target.
+another teammate can, then the current character cannot attack the target*.
 
-* Currently, there is no combat yet implemented. You can however press 'a' to
-bring up a nifty attack overlay system.
+*This is a lie. Line of sight is not yet tested.
 
 Lighting is also very important, as the game takes place entirely at night.
-Each character carries a lantern with him or her (this will be changed later).
+Each character carries a lantern with him or her (this may be changed later).
 This let's the character see the area around him/her. Press 'l' to toggle the
 lantern being on or off. Clearly lit areas are bright in color. Poorly lit
 areas are duller in color. 
