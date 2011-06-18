@@ -13,7 +13,8 @@ class Creature(Item.LocationAwareItem):
         self.representation = 't'
         self.foreGroundColorName = 'YELLOW'
         self.attribute = Colors.BOLD | Colors.getPairNumber(self.foreGroundColorName, "BLACK")
-        self.inputHandler = InputHandler.KeyboardInputHandler(ToastWrangler.screen)
+        self.inputHandler = InputHandler.SingletonKeyboardInputHander(ToastWrangler.screen)
+        Logger.put(str(self.inputHandler))
 
         self.minimumLightToSeeThreshold = 3
 
@@ -259,3 +260,5 @@ class Creature(Item.LocationAwareItem):
                     'The attack to you did %d damage.' % (damage))
         else:
             self.getWorld().addStatusLine('The attack missed!')
+
+        self.getWorld().waitForStatusLineUpdateConfirmation()

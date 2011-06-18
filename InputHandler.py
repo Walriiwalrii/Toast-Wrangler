@@ -2,7 +2,7 @@ import curses, random
 import ToastWrangler
 import Logger
 
-class InputHandler:
+class InputHandler(object):
     directionTranslator = {
         curses.KEY_A1:curses.KEY_A1,
         curses.KEY_UP:curses.KEY_UP,
@@ -66,8 +66,6 @@ class InputHandler:
                 return k
             Logger.put('Rejected: %d' % (k))
 
-        
-
 class KeyboardInputHandler(InputHandler):
     def __init__(self, screen):
         InputHandler.__init__(self, screen)
@@ -109,3 +107,21 @@ class KeyboardInputHandler(InputHandler):
                     continue
                 else:
                     return -1
+
+    def getSpecificKey(self, keyList):
+        #This function accepts a list of valid keys, or, just some
+        #representation of which key will be accepted (e.g., 'A' or 65)
+        if (isinstance(keyList, str) or isinstance(keyList, int)):
+            keyList = [keyList]
+
+        keyFound = None
+        while (not keyFound in keyList):
+            keyFound = self.waitForKey()
+        return keyFound
+
+class SingletonKeyboardInputHander(KeyboardInputHandler):
+    instance = None
+    def __new__(self, screen):
+        if self.instance == None:
+            self.instance = KeyboardInputHandler(screen)
+        return self.instance

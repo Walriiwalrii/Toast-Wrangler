@@ -1,6 +1,6 @@
 import curses, heapq, random, sys, copy
 
-import WorldState, Logger, ToastWrangler, Item, Creature, Player, BaseGroundTypes, FOV, Colors, Overlay, BaseCreatures
+import WorldState, Logger, ToastWrangler, Item, Creature, Player, BaseGroundTypes, FOV, Colors, Overlay, BaseCreatures, InputHandler
 
 class TeamViewer:
     INFINITY = 9999
@@ -366,13 +366,31 @@ class World:
     def placeItem(self, item, itemX = 0, itemY = 0):
         self.world[itemX][itemY].addItem(item, itemX, itemY)
 
+    def recalculateStatusOffset(self, addtlOffset = 0):
+        self.statusOffset = max(len(self.statusLines) - self.statusLinesHeight + addtlOffset, 0)
+
+    def removeLastStatusLine(self):
+        assert(len(self.statusLines) > 0)
+        self.statusLines = self.statusLines[0:-1]
+        self.recalculateStatusOffset()
+
+    def waitForStatusLineUpdateConfirmation(self, inputHandler = None):
+        if (inputHandler == None):
+            inputHandler = InputHandler.SingletonKeyboardInputHander(self.screen)
+
+        self.addStatusLine(' -- press any key to confirm -- ')
+        self.draw()
+        inputHandler.waitForKey()
+        self.removeLastStatusLine()
+        self.draw()
+
     def addAppropriateStatusLine(self, creature, stringIfPlayer, stringIfNotPlayer):
         if (not self.addStatusLineIfPlayer(creature, stringIfPlayer)):
             self.addStatusLine(stringIfNotPlayer)
 
     def addStatusLine(self, string):
         self.statusLines.append(string)
-        self.statusOffset = max(len(self.statusLines) - self.statusLinesHeight, 0)
+        self.recalculateStatusOffset()
         pass
 
     def addStatusLineIfPlayer(self, creature, string):
