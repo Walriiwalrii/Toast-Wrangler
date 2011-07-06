@@ -1,3 +1,18 @@
+Get rid of player controlled characters being a special class. Add a function
+to Creature that overrides their think method, so that Creatures can be
+dynamically become player controlled/non-player controlled (backup original
+think method).
+
+Actually consider line-of-sight when attacking (possible to hit targets the
+user was not aiming at).
+
+Better hit/miss messages (attributes?).
+
+Add in letting players choose to throw or melee weapons (e.g., throw rock
+versus bash with rock).
+
+Guns should support ammo (and keep track of ammo used).
+
 Add support for scrolling through status lines.
 
 Move some code from Player.py to Creature.py, and integrate a simple AI that
