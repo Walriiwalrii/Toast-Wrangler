@@ -380,8 +380,6 @@ class World:
 
     def waitForStatusLineUpdateConfirmation(self, inputHandler = None):
 
-        Logger.put('In waitForStatusLineUpdateConfirmation')
-
         if (inputHandler == None):
             inputHandler = InputHandler.SingletonKeyboardInputHander(self.screen)
 
@@ -407,7 +405,6 @@ class World:
         self.screen.addnstr(y, x, ' ' * promptMessageLength, promptMessageAttr)
 
         self.draw()
-        Logger.put('Leaving waitForStatusLineUpdateConfirmation')
 
     def addAppropriateStatusLine(self, creature, stringIfPlayer, stringIfNotPlayer):
         if (not self.addStatusLineIfPlayer(creature, stringIfPlayer)):
@@ -417,12 +414,15 @@ class World:
         self.statusLinesAppended = 0
 
     def addStatusLine(self, string):
+        #If we're completely full and we're about to add another line, then
+        #pause and let the user see messages before they scroll off the screen.
+        if (self.statusLinesAppended >= self.statusLinesHeight):
+            self.waitForStatusLineUpdateConfirmation()
+
         self.statusLines.append(string)
         self.recalculateStatusOffset()
         self.statusLinesAppended += 1
 
-        if (self.statusLinesAppended >= self.statusLinesHeight):
-            self.waitForStatusLineUpdateConfirmation()
         pass
 
     def addStatusLineIfPlayer(self, creature, string):
