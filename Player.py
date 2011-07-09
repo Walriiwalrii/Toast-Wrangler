@@ -103,6 +103,8 @@ class Player(BaseCreatures.CreatureWithInventory):
         
         self.startTurn()
 
+        self.world.resetStatusLinesAppended()
+
         retVal = False
 
         while (not self.isDoneAttacking() or not self.isDoneMoving()):

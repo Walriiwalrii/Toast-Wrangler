@@ -1,7 +1,3 @@
-Add support to status line: if multiple messages are created all at 'once'
-(between player turns) then let player scroll through lines before starting
-their turn.
-
 Add support for scrolling through status lines.
 
 Move some code from Player.py to Creature.py, and integrate a simple AI that

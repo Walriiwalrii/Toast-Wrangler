@@ -78,6 +78,7 @@ class World:
         self.width = width
         self.height = height
         self.statusLinesHeight = 5
+        self.maxSideBarLen = 11
         self.time = 0
         self.eventHeap = []
         self.shouldPause = False
@@ -115,11 +116,14 @@ class World:
                 else:
                     World.zHeightLookupTable[k] = result
 
+    
+        self.statusLinesAttribute = 0
+
         self.statusLines = []
         self.statusOffset = 11-6
+        self.statusLinesAppended = 0
         for i in range(0, 10):
             self.addStatusLine('WEEE %d' % (i))
-        self.statusLinesAttribute = 0
 
     def setOverlay(self, newOverlay):
         self.overlay = newOverlay
@@ -183,7 +187,7 @@ class World:
 
     def fileGridCharacterToObject(self, char, x, y):        
         assert(char in World.fileGridCharacterToObjectMap)
-        Logger.put('Looking up: %s = %s' % (char, World.fileGridCharacterToObjectMap[char]))
+        #Logger.put('Looking up: %s = %s' % (char, World.fileGridCharacterToObjectMap[char]))
         obj = World.fileGridCharacterToObjectMap[char](self,x,y)
         return obj
 
@@ -375,22 +379,50 @@ class World:
         self.recalculateStatusOffset()
 
     def waitForStatusLineUpdateConfirmation(self, inputHandler = None):
+
+        Logger.put('In waitForStatusLineUpdateConfirmation')
+
         if (inputHandler == None):
             inputHandler = InputHandler.SingletonKeyboardInputHander(self.screen)
 
-        self.addStatusLine(' -- press any key to confirm -- ')
+        promptMessage = 'PRESS A KEY'
+        promptMessageLength = len(promptMessage)
+
+        y = self.getTerminalHeight() - 1
+        x = self.getTerminalWidth() - self.maxSideBarLen - 1
+        promptMessageAttr = Colors.BLINK | Colors.getPairNumber('BLACK', 'YELLOW')
+
+        self.screen.addnstr(y, x, promptMessage, promptMessageAttr)
+        
         self.draw()
-        inputHandler.waitForKey()
-        self.removeLastStatusLine()
+
+        curses.flash() #Visual bell
+
+        keyPressed = inputHandler.waitForKey()
+
+        Logger.put(' found: %s' % (str(keyPressed)))
+
+        self.resetStatusLinesAppended()
+        #erase the prompt message
+        self.screen.addnstr(y, x, ' ' * promptMessageLength, promptMessageAttr)
+
         self.draw()
+        Logger.put('Leaving waitForStatusLineUpdateConfirmation')
 
     def addAppropriateStatusLine(self, creature, stringIfPlayer, stringIfNotPlayer):
         if (not self.addStatusLineIfPlayer(creature, stringIfPlayer)):
             self.addStatusLine(stringIfNotPlayer)
 
+    def resetStatusLinesAppended(self):
+        self.statusLinesAppended = 0
+
     def addStatusLine(self, string):
         self.statusLines.append(string)
         self.recalculateStatusOffset()
+        self.statusLinesAppended += 1
+
+        if (self.statusLinesAppended >= self.statusLinesHeight):
+            self.waitForStatusLineUpdateConfirmation()
         pass
 
     def addStatusLineIfPlayer(self, creature, string):
@@ -399,12 +431,17 @@ class World:
             return True #Let the caller know that we added a status line
         return False
 
+    def getTerminalWidth(self):
+        return self.screen.getmaxyx()[1]
+
+    def getTerminalHeight(self):
+        return self.screen.getmaxyx()[0]
+
     def drawStatusRegion(self):
-        maxSideBarLen = 11
-        width = self.screen.getmaxyx()[1] - 1 - maxSideBarLen - 1
+        width = self.getTerminalWidth() - 1 - self.maxSideBarLen - 1
         height = self.statusLinesHeight
         startX = 0
-        startY = self.screen.getmaxyx()[0] - 6
+        startY = self.getTerminalHeight() - 6
 
         if (self.statusLines == []):
             return
@@ -428,15 +465,15 @@ class World:
         else:
             drawModeStr = 'Detail Mode'
 
-        self.screen.addnstr(startY, width + 1, viewModeStr, maxSideBarLen, self.statusLinesAttribute)
-        self.screen.addnstr(startY + 1, width + 1, drawModeStr, maxSideBarLen, self.statusLinesAttribute)
-        self.screen.addnstr(startY + 2, width + 1, 'MovePts: %d' % (self.currentViewer.getMoveActionDistance() - self.currentViewer.getMoveDistanceThisTurn()), maxSideBarLen, self.statusLinesAttribute)
+        self.screen.addnstr(startY, width + 1, viewModeStr, self.maxSideBarLen, self.statusLinesAttribute)
+        self.screen.addnstr(startY + 1, width + 1, drawModeStr, self.maxSideBarLen, self.statusLinesAttribute)
+        self.screen.addnstr(startY + 2, width + 1, 'MovePts: %d' % (self.currentViewer.getMoveActionDistance() - self.currentViewer.getMoveDistanceThisTurn()), self.maxSideBarLen, self.statusLinesAttribute)
 
         #Generate HP string and pad with spaces
         currentViewerHPStr = 'HP: %d/%d' % (self.currentViewer.getHP(), self.currentViewer.getMaxHP())
-        currentViewerHPStr = currentViewerHPStr + ' ' * (maxSideBarLen - len(currentViewerHPStr))
+        currentViewerHPStr = currentViewerHPStr + ' ' * (self.maxSideBarLen - len(currentViewerHPStr))
 
-        self.screen.addnstr(startY + 3, width + 1, currentViewerHPStr, maxSideBarLen, self.currentViewer.getStatusBarHPAttribute())
+        self.screen.addnstr(startY + 3, width + 1, currentViewerHPStr, self.maxSideBarLen, self.currentViewer.getStatusBarHPAttribute())
 
 
     def moveItem(self, item, x, y, newX, newY):

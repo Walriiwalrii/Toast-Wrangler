@@ -14,6 +14,8 @@ WHITE = curses.COLOR_WHITE
 YELLOW = curses.COLOR_YELLOW
 
 BOLD = curses.A_BOLD
+BLINK = curses.A_BLINK
+UNDERLINE = curses.A_UNDERLINE
 
 colors = [BLACK, BLUE, CYAN, GREEN, MAGENTA, RED, WHITE, YELLOW ]
 colorValueToName = {
@@ -64,8 +66,8 @@ def init():
     for c1 in colors:
         colorPairs[c1] = {}
         for c2 in colors:
-            if (c2 == WHITE and c1 == BLACK):
-                continue
+#            if (c2 == WHITE and c1 == BLACK):
+#                continue
             #Logger.put('%s & %s = %d' % (colorValueToName[c2], colorValueToName[c1], pairCount))
             curses.init_pair(pairCount, c2, c1)
             colorPairs[c1][c2] = pairCount
