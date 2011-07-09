@@ -259,8 +259,6 @@ class Creature(Item.LocationAwareItem):
                     'The attack did %d damage.' % (damage),
                     'The attack to you did %d damage.' % (damage))
         else:
-            for i in range(0, 99):
-                self.getWorld().addStatusLine('The attack missed %d!' % (i))
-                #self.getWorld().addStatusLine('The attack missed!')
+            self.getWorld().addStatusLine('The attack missed!')
 
 

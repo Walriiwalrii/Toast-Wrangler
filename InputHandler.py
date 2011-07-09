@@ -75,8 +75,8 @@ class KeyboardInputHandler(InputHandler):
         return self.defaultPauseTime
 
     def waitForKey(self):
-        self.screen.timeout(-1) #Negative timeout = blocking mode
         self.screen.nodelay(0)
+        curses.cbreak()
         ret = self.getKey()
         self.screen.nodelay(1)
         return ret
