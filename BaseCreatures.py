@@ -22,6 +22,9 @@ class CreatureWithInventory(Creature.Creature):
             return Creature.Creature.getHelpDescription(self) + ' carrying ' + self.weapon.getDescription()
 
     def addToInventory(self, item):
+        Logger.put('%s' % (item))
+        Logger.put('%s' % (isinstance(item, Item.InventoryItem)))
+
         assert(isinstance(item, Item.InventoryItem))
         self.inventory.append(item)
 
@@ -55,6 +58,16 @@ class Bandito(CreatureWithInventory):
         "Banditos can see in the dark pretty well."
         self.minimumLightToSeeThreshold = self.minimumLightToSeeThreshold - 1
 
+class Deputy(CreatureWithInventory):
+    def __init__(self):
+        CreatureWithInventory.__init__(self)
+        self.description = 'deputy'
+        self.representation = '@'
+        self.speed = 200
+        self.attribute = Colors.getPairNumber("WHITE", "BLACK")
+        w = BaseItems.Revolver()
+        self.addToInventory(w)
+        self.setWeapon(w)
 
 class Outlaw(CreatureWithInventory):
     def __init__(self):
@@ -65,3 +78,21 @@ class Outlaw(CreatureWithInventory):
         self.attribute = Colors.getPairNumber("RED", "BLACK")
         "Outlaws cannot see in the dark well."
         self.minimumLightToSeeThreshold = self.minimumLightToSeeThreshold + 1
+
+class Sheriff(CreatureWithInventory):
+    def __init__(self):
+        CreatureWithInventory.__init__(self)
+        self.description = 'sheriff'
+        self.representation = '@'
+        self.speed = 200
+        self.attribute = Colors.getPairNumber("WHITE", "BLACK")
+        w = BaseItems.Revolver()
+        self.addToInventory(w)
+        self.setWeapon(w)
+
+        self.addToInventory(BaseItems.SheriffBadge())
+
+
+
+
+

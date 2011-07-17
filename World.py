@@ -101,7 +101,13 @@ class World:
         #self.makeForestMap()
         self.loadMapFromFile('testMap.txt')
 
-        self.team = TeamViewer(self, [Player.Player(), Player.Player()])
+        playerA = BaseCreatures.Deputy()
+        playerB = BaseCreatures.Sheriff()
+
+        playerA.makePlayerControlled()
+        playerB.makePlayerControlled()
+
+        self.team = TeamViewer(self, [playerA, playerB])
         self.currentViewer = self.team.getTeamMember(0)
         for i in range(0, len(self.team.getTeamList())):
             self.placeItem(self.team.getTeamMember(i), i, 0)
@@ -122,8 +128,6 @@ class World:
         self.statusLines = []
         self.statusOffset = 11-6
         self.statusLinesAppended = 0
-        for i in range(0, 10):
-            self.addStatusLine('WEEE %d' % (i))
 
     def setOverlay(self, newOverlay):
         self.overlay = newOverlay
@@ -149,7 +153,6 @@ class World:
         self.viewMode = newMode
 
     def setViewer(self, creature):
-        assert(isinstance(creature, Player.Player))
         self.currentViewer = creature
 
     def prepareForDraw(self):
@@ -338,8 +341,12 @@ class World:
             #Logger.put("Time: was %d now is %d: %s" % (self.time, nextEvent[0], str(nextEvent)))
             assert(self.time <= nextEvent[0])
             self.time = nextEvent[0]
-            if (nextEvent[1]() == True):
-                self.shouldPause = False
+            try:
+                if (nextEvent[1]() == True):
+                    self.shouldPause = False
+            except TypeError:
+                if (nextEvent[1](nextEvent[2]) == True):
+                    self.shouldPause = False
             return True
         return False
 
@@ -398,7 +405,7 @@ class World:
 
         keyPressed = inputHandler.waitForKey()
 
-        Logger.put(' found: %s' % (str(keyPressed)))
+        Logger.put(' key found: %s' % (str(keyPressed)))
 
         self.resetStatusLinesAppended()
         #erase the prompt message

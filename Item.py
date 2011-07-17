@@ -15,6 +15,9 @@ class Item(object):
     def isAlive(self):
         return False
 
+    def __str__(self):
+        return self.getDescription()
+
     def getDescription(self, viewer=None, globalLighting=None):
         return self.description
 

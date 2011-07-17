@@ -1,5 +1,5 @@
 import curses
-import Logger, Item, Colors, InputHandler, ToastWrangler, FOV, Behavior
+import Behavior, Item, Colors, FOV, InputHandler, Logger, ToastWrangler
 import copy, random
 
 class Creature(Item.LocationAwareItem):
@@ -39,6 +39,8 @@ class Creature(Item.LocationAwareItem):
         self.toggleLightCost = 1
 
         self.team = 0
+
+        self.originalThink = self.doThink
 
     def getAttackDamage(self, target):
         return self.attackDamage
@@ -203,8 +205,11 @@ class Creature(Item.LocationAwareItem):
     def makeNewLight(self):
         return FOV.LightMap(self.world, self.x, self.y, 10.0)
 
-    def placeInto(self, world, worldCell, x, y):
-        #Logger.put('%s was placed into %d,%d' % (self.getDescription(None, None), x, y))
+    def insertThinkCallback(self):
+        self.world.addEventCallback(self.speed, self.doThink, self)
+
+    def placeInto(self, world, worldCell, x, y, insertThinkCallback = True):
+        Logger.put('%s was placed into %d,%d' % (self.getDescription(None, None), x, y))
 
         if (not world == self.world):
             self.world = world
@@ -215,16 +220,26 @@ class Creature(Item.LocationAwareItem):
             self.y = y
             #END HACK
             self.turnLightOn()
-            self.world.addEventCallback(self.speed, self.doThink, self)
+    
+            if (insertThinkCallback):
+                self.insertThinkCallback()
         Item.LocationAwareItem.placeInto(self, world, worldCell, x, y)
-
-        
 
     def moveTo(self, destX, destY):
         if (self.world.isInBounds(destX, destY) and self.world.getMayPass(destX, destY, self)):
             self.world.moveItem(self, self.x, self.y, destX, destY)
             return True
         return False
+
+    def isPlayerControlled(self):
+        import Player
+        return self.doThink == Player.doThink
+
+    def makePlayerControlled(self):
+        import Player
+        Logger.put('Creature %s is now controlled by user.' % (str(self)))
+        self.doThink = Player.doThink
+        Player.makePlayerControlled(self)
 
     def doThink(self):
         dir = InputHandler.InputHandler.getRandomDirection()
@@ -234,7 +249,7 @@ class Creature(Item.LocationAwareItem):
         behavior = Behavior.PerhapsAttackNearest(self)
         behavior.doAction()
 
-        self.world.addEventCallback(self.speed, self.doThink, self)
+        self.insertThinkCallback()
 
         self.world.draw()
         curses.napms(200)

@@ -1,7 +1,4 @@
-Get rid of player controlled characters being a special class. Add a function
-to Creature that overrides their think method, so that Creatures can be
-dynamically become player controlled/non-player controlled (backup original
-think method).
+Add attributes to status lines. To allow for, e.g., red damage messages.
 
 Actually consider line-of-sight when attacking (possible to hit targets the
 user was not aiming at).
